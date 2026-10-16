@@ -70,37 +70,35 @@
   }
   .cardbox,.tablewrap{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
   .tablewrap{overflow:auto;max-width:100%;-webkit-overflow-scrolling:touch}
-  table{border-collapse:collapse;width:100%;min-width:1000px;font-size:13px}
+  table{border-collapse:collapse;width:100%;min-width:880px;font-size:12.5px}
   thead th{
     position:sticky;top:0;background:var(--chip);color:var(--text);text-align:left;
-    padding:9px 10px;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);z-index:2;
+    padding:8px 7px;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);z-index:2;
   }
-  tbody td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+  tbody td{padding:8px 7px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
   tbody tr:last-child td{border-bottom:0}
   tbody tr:hover td{background:var(--chip)}
   td.num,th.num{text-align:right}
   td.c,th.c{text-align:center}
   .nm{font-weight:600}
-  .tick{color:var(--accent-2);text-decoration:none;font-size:11.5px;border:1px solid var(--border);border-radius:6px;padding:1px 5px;margin-left:6px}
+  .tick{color:var(--accent-2);text-decoration:none;font-size:10px;border:1px solid var(--border);border-radius:5px;padding:0 4px;margin-left:4px}
   .tick:hover{text-decoration:underline}
-  .badge{display:inline-block;border-radius:8px;padding:3px 9px;font-size:12px;font-weight:700}
+  .badge{display:inline-block;border-radius:7px;padding:2px 7px;font-size:11.5px;font-weight:700}
   .badge.buy{background:var(--buy-bg);color:var(--buy-fg)}
   .badge.hold{background:var(--hold-bg);color:var(--hold-fg)}
   .badge.none{background:var(--none-bg);color:var(--none-fg);font-weight:500}
-  .badge.pause{background:transparent;color:var(--pause-fg);border:1px dashed var(--pause-fg);font-weight:600}
-  .badge.rev{background:transparent;color:var(--rev-fg);border:1px dashed var(--rev-fg);font-weight:600}
   .up{color:var(--pos);font-weight:600}
   .down{color:var(--neg);font-weight:600}
   .na{color:var(--none-fg)}
-  .note{font-size:11.5px;color:var(--muted);white-space:normal;max-width:220px}
+  .note{font-size:10.5px;color:var(--muted);white-space:normal;max-width:130px}
   .empty{padding:22px;text-align:center;color:var(--muted)}
   footer{margin-top:14px;font-size:11.5px;color:var(--muted);line-height:1.6}
   footer a{color:var(--accent-2)}
   @media (max-width:759px){
     header.app h1{font-size:15px}
-    table{font-size:12px;min-width:840px}
-    thead th{padding:7px 7px;font-size:10.5px}
-    tbody td{padding:7px 7px}
+    table{font-size:11.5px;min-width:780px}
+    thead th{padding:6px 5px;font-size:10px}
+    tbody td{padding:6px 5px}
     .tick{margin-left:4px}
   }
 </style>
@@ -138,7 +136,7 @@
     <table>
       <thead>
         <tr>
-          <th class="c">№</th><th>Компания</th><th>Покупать</th><th class="num">Котировка, ₽</th>
+          <th class="c">№</th><th>Компания</th><th>Покупать</th><th class="num">Текущая, ₽</th>
           <th class="num">Цель</th><th class="num">Долгоср. цель</th>
           <th class="num">Объявл. / пред. дивиденды</th><th class="num">ДД</th><th class="c">Дивиденды</th>
           <th class="c">Рекомендация Т-Банка</th><th class="num">Прогнозная цена, ₽</th><th class="num">Потенциал</th>
@@ -148,7 +146,6 @@
     </table>
   </div>
 
-/div>
 
   <footer>
     Рекомендация, прогнозная цена и потенциал — сводный прогноз Т-Банка (Т-Инвестиции) по каждой бумаге,
@@ -166,12 +163,12 @@ var DATA = [
  {n:1, name:"Аэрофлот",         tick:"AFLT",  buy:"тек",       q:35.15, goal:"135",  lgoal:"200",           div:"5,29",  dy:"12%",    dyNum:0.12, dyear:"2026",   rec:"hold", fc:"42,92",    up:21.72},
  {n:2, name:"Башнефть пр",      tick:"BANEP", buy:"тек",       q:777.5, goal:"2400", lgoal:"2400",          div:"69,29", dy:"7%",     dyNum:0.07, dyear:"2026",   rec:"hold", fc:"933",      up:20.08},
  {n:3, name:"Газпром",          tick:"GAZP",  buy:"тек",       q:104.84, goal:"190",  lgoal:"400",           div:"0",     dy:"—",      dyNum:null, dyear:"2026?",  rec:"hold", fc:"140,9",    up:34.31},
- {n:4, name:"Газпромнефть",     tick:"SIBN",  buy:"ПАУЗА",     q:572.5, goal:"870",  lgoal:"1100",          div:"28,11", dy:"6%",     dyNum:0.06, dyear:"2026",   rec:"hold", fc:"576,8",    up:0.63},
+ {n:4, name:"Газпромнефть",     tick:"SIBN",  buy:"пауза",     q:572.5, goal:"870",  lgoal:"1100",          div:"28,11", dy:"6%",     dyNum:0.06, dyear:"2026",   rec:"hold", fc:"576,8",    up:0.63},
  {n:5, name:"ГМК Норникель",    tick:"GMKN",  buy:"тек",       q:115.16, goal:"196",  lgoal:"280",           div:"—",     dy:"0",      dyNum:0,    dyear:"2026?",  rec:"buy",  fc:"156",      up:34.69},
  {n:6, name:"Россети Урала",    tick:"MRKU",  buy:"пауза",     q:0.6776, goal:"0,77", lgoal:"0,9",           div:"0,0612",dy:"10%",    dyNum:0.10, dyear:"2026",   rec:"buy",  fc:"0,70",     up:2.95},
  {n:7, name:"Мечел пр",         tick:"MTLRP", buy:"тек",       q:39.8, goal:"245",  lgoal:"440",           div:"0",     dy:"0%",     dyNum:0,    dyear:"2027?",  rec:"hold", fc:"50",       up:25.35},
  {n:8, name:"Новатэк",          tick:"NVTK",  buy:"тек",       q:1080.6, goal:"1370", lgoal:"1800",          div:"47,23", dy:"8%",     dyNum:0.08, dyear:"2026",   rec:"buy",  fc:"1 437,8",  up:32.94},
- {n:9, name:"Мвидео",           tick:"MVID",  buy:"пересмотр", q:43.15, goal:"237",  lgoal:"на пересмотре", div:"0",     dy:"0",      dyNum:0,    dyear:"—",      rec:"hold", fc:"42,5",     up:-1.39},
+ {n:9, name:"Мвидео",           tick:"MVID",  buy:"пересм", q:43.15, goal:"237",  lgoal:"—", div:"0",     dy:"0",      dyNum:0,    dyear:"—",      rec:"hold", fc:"42,5",     up:-1.39},
  {n:10,name:"Пермэнергосбыт",   tick:"PMSB",  buy:"тек",       q:442.9, goal:"600",  lgoal:"600",           div:"32,00", dy:"12,00%", dyNum:0.12, dyear:"2026",   rec:null,   fc:null,      up:null},
  {n:11,name:"ФСК-Россети",      tick:"FEES",  buy:"тек",       q:0.05688, goal:"0,30", lgoal:"0,45",          div:"0,00",  dy:"0,00%",  dyNum:0,    dyear:"2027",   rec:null,   fc:null,      up:null},
  {n:12,name:"Фосагро",          tick:"PHOR",  buy:"тек",       q:5480, goal:"8400", lgoal:"11000",         div:"0",     dy:"0%",     dyNum:0,    dyear:"2026",   rec:"hold", fc:"6 186,37", up:12.83},
@@ -179,7 +176,7 @@ var DATA = [
  {n:14,name:"Транснефть пр",    tick:"TRNFP", buy:"тек",       q:1056.6, goal:"1650", lgoal:"2130",          div:"198,25",dy:"13%",    dyNum:0.13, dyear:"2026",   rec:"buy",  fc:"1 450",    up:33.12},
  {n:15,name:"ДВМП (пока спек)", tick:"FESH",  buy:"тек",       q:62.96, goal:"120",  lgoal:"120",           div:"VEROYATNOST_VYKUPA", dy:"—", dyNum:null, dyear:"—", rec:"buy", fc:"80",     up:26.98},
  {n:16,name:"ВТБ",              tick:"VTBR",  buy:"тек",       q:54.79, goal:"180",  lgoal:"416",           div:"9,71",  dy:"13%",    dyNum:0.13, dyear:"2026",   rec:"buy",  fc:"89,55",    up:63.27},
- {n:17,name:"Лукойл",           tick:"LKOH",  buy:"ПАУЗА",     q:6016, goal:"6150", lgoal:"7700",          div:"675",   dy:"15%",    dyNum:0.15, dyear:"2026",   rec:"buy",  fc:"6 348,5",  up:5.50},
+ {n:17,name:"Лукойл",           tick:"LKOH",  buy:"пауза",     q:6016, goal:"6150", lgoal:"7700",          div:"675",   dy:"15%",    dyNum:0.15, dyear:"2026",   rec:"buy",  fc:"6 348,5",  up:5.50},
  {n:18,name:"НЛМК",             tick:"NLMK",  buy:"тек",       q:76.02, goal:"210",  lgoal:"260",           div:"0",     dy:"—",      dyNum:null, dyear:"2028?",  rec:"hold", fc:"88,28",    up:16.04},
  {n:19,name:"Мосбиржа",         tick:"MOEX",  buy:"тек",       q:154, goal:"234",  lgoal:"270",           div:"19,57", dy:"11%",    dyNum:0.11, dyear:"2026",   rec:"hold", fc:"197,57",   up:28.24},
  {n:20,name:"Полюс",            tick:"PLZL",  buy:"тек",       q:1108.4, goal:"2000", lgoal:"2600",          div:"56,8",  dy:"7%",     dyNum:0.07, dyear:"2030 ?", rec:"hold", fc:"1 393,8",  up:25.78}
@@ -189,11 +186,7 @@ var REC_LABEL = {buy:"Покупать", hold:"Держать", null:"нет п�
 
 function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
 function divCell(d){ return d === "VEROYATNOST_VYKUPA" ? '<span class="note">Вероятность выкупа по 100+ рублей</span>' : esc(d); }
-function buyBadge(b){
-  if (/пауза/i.test(b)) return '<span class="badge pause">'+esc(b)+'</span>';
-  if (/пересмотр/i.test(b)) return '<span class="badge rev">'+esc(b)+'</span>';
-  return esc(b);
-}
+function buyBadge(b){ return esc(b); }
 function recBadge(r){
   if (r === "buy")  return '<span class="badge buy">Покупать</span>';
   if (r === "hold") return '<span class="badge hold">Держать</span>';
@@ -209,6 +202,7 @@ function qFmt(v){
   var dec = v < 0.1 ? 5 : (v < 1 ? 4 : (v === Math.round(v) ? 0 : 2));
   var s = v.toFixed(dec).split(".");
   s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  if (s.length > 1){ s[1] = s[1].replace(/0+$/, ""); if (!s[1]) return s[0]; }
   return s.length > 1 ? s[0] + "," + s[1] : s[0];
 }
 function tickLink(t){ return '<a class="tick" href="https://www.tbank.ru/invest/stocks/'+t+'/" target="_blank" rel="noopener">'+t+'</a>'; }
