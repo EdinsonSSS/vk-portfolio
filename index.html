@@ -4,6 +4,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
 <title>Инвестиционный портфель Эдуарда Матвеева</title>
 <meta name="description" content="Портфель из 20 бумаг: цели, дивиденды и рекомендации Т-Банка (Т-Инвестиции). Мини-приложение VK / GitHub Pages.">
 <style>
@@ -113,6 +115,7 @@
 </head>
 <body>
 <div class="wrap">
+  <noscript><div style="background:#c02f2f;color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 10px">Для работы приложения включите JavaScript.</div></noscript>
   <header class="app">
     <div>
       <h1>Инвестиционный портфель Эдуарда Матвеева</h1>
@@ -149,11 +152,11 @@
           <th class="c">Рекомендация Т-Банка</th><th class="num">Прогнозная цена, ₽</th><th class="num">Потенциал</th>
         </tr>
       </thead>
-      <tbody id="tbody"></tbody>
+      <tbody id="tbody"><tr><td colspan="12" class="empty">Загрузка…</td></tr></tbody>
     </table>
   </div>
 
-  <div class="cards cardbox" id="cards"></div>
+  <div class="cards cardbox" id="cards"><div class="empty">Загрузка…</div></div>
 
   <footer>
     Рекомендация, прогнозная цена и потенциал — сводный прогноз Т-Банка (Т-Инвестиции) по каждой бумаге,
@@ -164,8 +167,6 @@
   </footer>
 </div>
 
-<!-- VK Bridge: инициализация мини-приложения и тема VK (вне VK страница работает без него) -->
-<script src="https://unpkg.com/@vkontakte/vk-bridge@2/dist/browser.min.js" onerror="window.__noVkBridge=true"></script>
 <script>
 "use strict";
 /* ============ ДАННЫЕ ПОРТФЕЛЯ (редактируйте здесь) ============ */
@@ -324,26 +325,72 @@ try {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
 } catch(e){}
 
-/* ============ VK Bridge ============ */
-(function(){
-  if (!window.VKBridge) return;
-  try {
+/* ============ Защита от ошибок: показ вместо пустого экрана ============ */
+var DEBUG = location.search.indexOf("debug=1") >= 0;
+function showErr(msg){
+  try{
+    var b = document.getElementById("errbox");
+    if (!b){
+      b = document.createElement("div"); b.id = "errbox";
+      b.style.cssText = "background:#c02f2f;color:#fff;padding:8px 12px;border-radius:10px;margin:0 0 10px;font-size:12px";
+      var w = document.querySelector(".wrap"); w.insertBefore(b, w.children[1] || null);
+    }
+    b.textContent = "Ошибка JS: " + msg;
+  }catch(e){}
+}
+window.addEventListener("error", function(e){ showErr(e.message + " (строка " + e.lineno + ")"); });
+window.addEventListener("unhandledrejection", function(e){ showErr("promise: " + e.reason); });
+
+function dbgInfo(){
+  if (!DEBUG) return;
+  var d = document.createElement("div");
+  d.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:rgba(10,15,12,.94);color:#d1fae5;font:11px/1.55 monospace;padding:10px;border-radius:10px;white-space:pre-wrap;max-height:45%;overflow:auto";
+  var ls = (function(){ try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return "ок"; }catch(e){ return "недоступен"; } })();
+  d.textContent = [
+    "debug (?debug=1)",
+    "url: " + location.href,
+    "iframe: " + (window.self !== window.top ? "да (внутри VK)" : "нет"),
+    "referrer: " + (document.referrer || "-"),
+    "UA: " + navigator.userAgent,
+    "VK Bridge: " + (window.VKBridge ? "загружен" : "НЕ загружен"),
+    "theme: " + document.documentElement.dataset.theme + " (mode " + themeMode + ", vk " + (vkScheme || "-") + ")",
+    "localStorage: " + ls,
+    "строк данных: " + DATA.length
+  ].join("\n");
+  document.body.appendChild(d);
+}
+
+/* ============ VK Bridge: асинхронно с двух CDN, рендер не блокирует ============ */
+function initBridge(){
+  try{
     VKBridge.send("VKWebAppInit").catch(function(){});
     VKBridge.subscribe(function(e){
       var d = (e && e.detail) || {};
-      if (d.type === "VKWebAppConfigUpdated" && d.data && d.data.scheme){
-        vkScheme = d.data.scheme; applyTheme();
-      }
+      if (d.type === "VKWebAppConfigUpdated" && d.data && d.data.scheme){ vkScheme = d.data.scheme; applyTheme(); }
     });
     VKBridge.send("VKWebAppGetConfig").then(function(c){
       if (c && c.scheme){ vkScheme = c.scheme; applyTheme(); }
     }).catch(function(){});
-  } catch(e){}
-})();
+  }catch(e){ showErr("bridge: " + e); }
+}
+function loadBridge(i){
+  var urls = [
+    "https://unpkg.com/@vkontakte/vk-bridge@2/dist/browser.min.js",
+    "https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2/dist/browser.min.js"
+  ];
+  if (window.VKBridge){ initBridge(); dbgInfo(); return; }
+  if (i >= urls.length){ dbgInfo(); return; }
+  var s = document.createElement("script");
+  s.src = urls[i]; s.async = true;
+  s.onload = function(){ if (window.VKBridge) initBridge(); else loadBridge(i + 1); dbgInfo(); };
+  s.onerror = function(){ loadBridge(i + 1); };
+  document.head.appendChild(s);
+}
 
 renderStats();
 applyTheme();
 render();
+loadBridge(0);
 </script>
 </body>
 </html>
