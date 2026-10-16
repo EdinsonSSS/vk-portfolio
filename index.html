@@ -69,7 +69,7 @@
     background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-size:13px;
   }
   .cardbox,.tablewrap{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
-  .tablewrap{overflow:auto;max-width:100%}
+  .tablewrap{overflow:auto;max-width:100%;-webkit-overflow-scrolling:touch}
   table{border-collapse:collapse;width:100%;min-width:1000px;font-size:13px}
   thead th{
     position:sticky;top:0;background:var(--chip);color:var(--text);text-align:left;
@@ -93,23 +93,15 @@
   .down{color:var(--neg);font-weight:600}
   .na{color:var(--none-fg)}
   .note{font-size:11.5px;color:var(--muted);white-space:normal;max-width:220px}
-  /* карточки для мобильных (VK Mini App) */
-  .cards{display:none;padding:6px}
-  .pcard{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:8px 6px;background:var(--card)}
-  .pcard+.pcard{margin-top:8px}
-  .pcard .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .pcard .top .nm{font-size:15px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:8px;font-size:13px}
-  .grid .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.3px}
-  .grid .row{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--border);padding:2px 0}
-  .grid .row:last-child{border-bottom:0}
   .empty{padding:22px;text-align:center;color:var(--muted)}
   footer{margin-top:14px;font-size:11.5px;color:var(--muted);line-height:1.6}
   footer a{color:var(--accent-2)}
   @media (max-width:759px){
-    .tablewrap{display:none}
-    .cards{display:block}
     header.app h1{font-size:15px}
+    table{font-size:12px;min-width:840px}
+    thead th{padding:7px 7px;font-size:10.5px}
+    tbody td{padding:7px 7px}
+    .tick{margin-left:4px}
   }
 </style>
 </head>
@@ -156,7 +148,7 @@
     </table>
   </div>
 
-  <div class="cards cardbox" id="cards"><div class="empty">Загрузка…</div></div>
+/div>
 
   <footer>
     Рекомендация, прогнозная цена и потенциал — сводный прогноз Т-Банка (Т-Инвестиции) по каждой бумаге,
@@ -255,10 +247,9 @@ function renderStats(){
 
 function render(){
   var list = filtered();
-  var tb = document.getElementById("tbody"), cd = document.getElementById("cards");
+  var tb = document.getElementById("tbody");
   if (!list.length){
     tb.innerHTML = '<tr><td colspan="12" class="empty">Ничего не найдено</td></tr>';
-    cd.innerHTML = '<div class="empty">Ничего не найдено</div>';
     return;
   }
   tb.innerHTML = list.map(function(d){
@@ -276,22 +267,6 @@ function render(){
       '<td class="num">'+(d.fc?esc(d.fc):'<span class="na">—</span>')+'</td>'+
       '<td class="num">'+upCell(d.up)+'</td>'+
     '</tr>';
-  }).join("");
-  cd.innerHTML = list.map(function(d){
-    return '<div class="pcard">'+
-      '<div class="top"><span class="nm">'+esc(d.name)+' '+tickLink(d.tick)+'</span>'+recBadge(d.rec)+'</div>'+
-      '<div class="grid">'+
-        '<div class="row"><span class="k">Покупать</span><span>'+buyBadge(d.buy)+'</span></div>'+
-        '<div class="row"><span class="k">Котировка, ₽</span><span>'+qFmt(d.q)+'</span></div>'+
-        '<div class="row"><span class="k">Потенциал</span><span>'+upCell(d.up)+'</span></div>'+
-        '<div class="row"><span class="k">Цель</span><span>'+esc(d.goal)+'</span></div>'+
-        '<div class="row"><span class="k">Долгоср. цель</span><span>'+esc(d.lgoal)+'</span></div>'+
-        '<div class="row"><span class="k">Дивиденды</span><span>'+divCell(d.div)+'</span></div>'+
-        '<div class="row"><span class="k">ДД</span><span>'+esc(d.dy)+'</span></div>'+
-        '<div class="row"><span class="k">Год дивидендов</span><span>'+esc(d.dyear)+'</span></div>'+
-        '<div class="row"><span class="k">Прогноз Т-Банка, ₽</span><span>'+(d.fc?esc(d.fc):'<span class="na">—</span>')+'</span></div>'+
-      '</div>'+
-    '</div>';
   }).join("");
 }
 
