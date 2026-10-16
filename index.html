@@ -352,7 +352,7 @@ function dbgInfo(){
     "iframe: " + (window.self !== window.top ? "да (внутри VK)" : "нет"),
     "referrer: " + (document.referrer || "-"),
     "UA: " + navigator.userAgent,
-    "VK Bridge: " + (window.VKBridge ? "загружен" : "НЕ загружен"),
+    "VK Bridge: " + (bridgeObj() ? "загружен" : "НЕ загружен") + ", init: " + (bridgeInited ? "отправлен" : "нет"),
     "theme: " + document.documentElement.dataset.theme + " (mode " + themeMode + ", vk " + (vkScheme || "-") + ")",
     "localStorage: " + ls,
     "строк данных: " + DATA.length
@@ -361,28 +361,34 @@ function dbgInfo(){
 }
 
 /* ============ VK Bridge: асинхронно с двух CDN, рендер не блокирует ============ */
+var bridgeInited = false;
+function bridgeObj(){ return window.vkBridge || window.VKBridge || null; } // в browser-сборке глобал — window.vkBridge
 function initBridge(){
+  var B = bridgeObj();
+  if (!B) return;
   try{
-    VKBridge.send("VKWebAppInit").catch(function(){});
-    VKBridge.subscribe(function(e){
+    B.send("VKWebAppInit").catch(function(){});
+    bridgeInited = true;
+    B.subscribe(function(e){
       var d = (e && e.detail) || {};
       if (d.type === "VKWebAppConfigUpdated" && d.data && d.data.scheme){ vkScheme = d.data.scheme; applyTheme(); }
     });
-    VKBridge.send("VKWebAppGetConfig").then(function(c){
+    B.send("VKWebAppGetConfig").then(function(c){
       if (c && c.scheme){ vkScheme = c.scheme; applyTheme(); }
     }).catch(function(){});
   }catch(e){ showErr("bridge: " + e); }
 }
 function loadBridge(i){
   var urls = [
+    "vk-bridge.min.js", // локальная копия в репозитории: грузится с того же адреса, что и приложение
     "https://unpkg.com/@vkontakte/vk-bridge@2/dist/browser.min.js",
     "https://cdn.jsdelivr.net/npm/@vkontakte/vk-bridge@2/dist/browser.min.js"
   ];
-  if (window.VKBridge){ initBridge(); dbgInfo(); return; }
+  if (bridgeObj()){ initBridge(); dbgInfo(); return; }
   if (i >= urls.length){ dbgInfo(); return; }
   var s = document.createElement("script");
   s.src = urls[i]; s.async = true;
-  s.onload = function(){ if (window.VKBridge) initBridge(); else loadBridge(i + 1); dbgInfo(); };
+  s.onload = function(){ if (bridgeObj()) initBridge(); else loadBridge(i + 1); dbgInfo(); };
   s.onerror = function(){ loadBridge(i + 1); };
   document.head.appendChild(s);
 }
